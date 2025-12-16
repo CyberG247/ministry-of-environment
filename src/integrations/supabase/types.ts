@@ -14,16 +14,253 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      lgas: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          lga_id: string | null
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          lga_id?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          lga_id?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_lga_id_fkey"
+            columns: ["lga_id"]
+            isOneToOne: false
+            referencedRelation: "lgas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      report_updates: {
+        Row: {
+          created_at: string
+          id: string
+          new_status: Database["public"]["Enums"]["report_status"]
+          notes: string | null
+          previous_status: Database["public"]["Enums"]["report_status"] | null
+          report_id: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          new_status: Database["public"]["Enums"]["report_status"]
+          notes?: string | null
+          previous_status?: Database["public"]["Enums"]["report_status"] | null
+          report_id: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          new_status?: Database["public"]["Enums"]["report_status"]
+          notes?: string | null
+          previous_status?: Database["public"]["Enums"]["report_status"] | null
+          report_id?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_updates_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reports: {
+        Row: {
+          address: string | null
+          assigned_at: string | null
+          assigned_officer_id: string | null
+          category: Database["public"]["Enums"]["report_category"]
+          created_at: string
+          description: string
+          id: string
+          is_anonymous: boolean
+          latitude: number | null
+          lga_id: string | null
+          longitude: number | null
+          media_urls: string[] | null
+          priority: Database["public"]["Enums"]["report_priority"] | null
+          reporter_id: string | null
+          resolution_media_urls: string[] | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          status: Database["public"]["Enums"]["report_status"]
+          title: string
+          tracking_id: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          assigned_at?: string | null
+          assigned_officer_id?: string | null
+          category: Database["public"]["Enums"]["report_category"]
+          created_at?: string
+          description: string
+          id?: string
+          is_anonymous?: boolean
+          latitude?: number | null
+          lga_id?: string | null
+          longitude?: number | null
+          media_urls?: string[] | null
+          priority?: Database["public"]["Enums"]["report_priority"] | null
+          reporter_id?: string | null
+          resolution_media_urls?: string[] | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          title: string
+          tracking_id: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          assigned_at?: string | null
+          assigned_officer_id?: string | null
+          category?: Database["public"]["Enums"]["report_category"]
+          created_at?: string
+          description?: string
+          id?: string
+          is_anonymous?: boolean
+          latitude?: number | null
+          lga_id?: string | null
+          longitude?: number | null
+          media_urls?: string[] | null
+          priority?: Database["public"]["Enums"]["report_priority"] | null
+          reporter_id?: string | null
+          resolution_media_urls?: string[] | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          title?: string
+          tracking_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_lga_id_fkey"
+            columns: ["lga_id"]
+            isOneToOne: false
+            referencedRelation: "lgas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          assigned_lga_id: string | null
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          assigned_lga_id?: string | null
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          assigned_lga_id?: string | null
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_assigned_lga_id_fkey"
+            columns: ["assigned_lga_id"]
+            isOneToOne: false
+            referencedRelation: "lgas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_tracking_id: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_field_officer: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "citizen" | "field_officer" | "admin" | "super_admin"
+      report_category:
+        | "illegal_dumping"
+        | "blocked_drainage"
+        | "open_defecation"
+        | "noise_pollution"
+        | "sanitation_issues"
+        | "environmental_nuisance"
+      report_priority: "low" | "medium" | "high" | "emergency"
+      report_status:
+        | "submitted"
+        | "assigned"
+        | "in_progress"
+        | "resolved"
+        | "closed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +387,24 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["citizen", "field_officer", "admin", "super_admin"],
+      report_category: [
+        "illegal_dumping",
+        "blocked_drainage",
+        "open_defecation",
+        "noise_pollution",
+        "sanitation_issues",
+        "environmental_nuisance",
+      ],
+      report_priority: ["low", "medium", "high", "emergency"],
+      report_status: [
+        "submitted",
+        "assigned",
+        "in_progress",
+        "resolved",
+        "closed",
+      ],
+    },
   },
 } as const
