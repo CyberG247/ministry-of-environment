@@ -1,5 +1,5 @@
 import { Quote } from "lucide-react";
-import commissionerImage from "@/assets/commissioner-placeholder.jpg";
+import commissionerImage from "@/assets/commissioner.png";
 
 const CommissionerSection = () => {
   return (
@@ -13,7 +13,7 @@ const CommissionerSection = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent z-10" />
                 <img
                   src={commissionerImage}
-                  alt="Hon. Commissioner of Environment & Climate Change"
+                  alt="Dr. Nura Ibrahim Dandoka - Commissioner of Environment & Climate Change"
                   className="w-full h-full object-cover min-h-[400px]"
                 />
                 {/* Nigerian Flag Accent */}
@@ -39,10 +39,10 @@ const CommissionerSection = () => {
 
                   <div className="pt-4 border-t border-border">
                     <p className="font-serif font-bold text-lg text-foreground">
-                      Hon. Commissioner
+                      Dr. Nura Ibrahim Dandoka
                     </p>
                     <p className="text-muted-foreground">
-                      Ministry of Environment & Climate Change
+                      Hon. Commissioner, Ministry of Environment & Climate Change
                     </p>
                     <p className="text-sm text-primary font-medium mt-1">
                       Jigawa State Government

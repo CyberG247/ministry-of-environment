@@ -1,9 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Search } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const TrackReport = () => {
   const [trackingId, setTrackingId] = useState("");
+  const navigate = useNavigate();
+
+  const handleTrack = () => {
+    if (trackingId.trim()) {
+      navigate(`/track?id=${encodeURIComponent(trackingId.trim().toUpperCase())}`);
+    } else {
+      navigate("/track");
+    }
+  };
 
   return (
     <section id="track" className="py-20 bg-background">
@@ -35,11 +45,12 @@ const TrackReport = () => {
                     type="text"
                     placeholder="Enter Tracking ID (e.g., ECSRS-2024-0001)"
                     value={trackingId}
-                    onChange={(e) => setTrackingId(e.target.value)}
+                    onChange={(e) => setTrackingId(e.target.value.toUpperCase())}
+                    onKeyDown={(e) => e.key === "Enter" && handleTrack()}
                     className="w-full h-14 pl-12 pr-4 rounded-xl bg-background text-foreground placeholder:text-muted-foreground border-0 focus:ring-2 focus:ring-primary-foreground/50 outline-none"
                   />
                 </div>
-                <Button variant="hero" size="xl">
+                <Button variant="hero" size="xl" onClick={handleTrack}>
                   Track
                   <ArrowRight className="w-5 h-5" />
                 </Button>

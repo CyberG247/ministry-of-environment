@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import ReportsMap from "@/components/admin/ReportsMap";
 import {
   Leaf,
   LayoutDashboard,
@@ -31,6 +32,7 @@ import {
   ChevronRight,
   Eye,
   UserCheck,
+  Map,
 } from "lucide-react";
 
 interface Report {
@@ -290,6 +292,15 @@ const AdminDashboard = () => {
             <BarChart3 className="w-5 h-5" />
             Analytics
           </button>
+          <button
+            onClick={() => setActiveTab("map")}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+              activeTab === "map" ? "bg-primary text-primary-foreground" : "text-background/70 hover:bg-background/10"
+            }`}
+          >
+            <Map className="w-5 h-5" />
+            GIS Map
+          </button>
           {userRole === "super_admin" && (
             <button
               onClick={() => setActiveTab("users")}
@@ -324,6 +335,7 @@ const AdminDashboard = () => {
                 {activeTab === "overview" && "Dashboard Overview"}
                 {activeTab === "reports" && "Reports Management"}
                 {activeTab === "analytics" && "Analytics"}
+                {activeTab === "map" && "GIS Map View"}
                 {activeTab === "users" && "User Management"}
               </h1>
               <p className="text-muted-foreground text-sm">
@@ -636,6 +648,22 @@ const AdminDashboard = () => {
                     <p className="text-muted-foreground">Total Resolved</p>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Map Tab */}
+          {activeTab === "map" && (
+            <div className="space-y-6">
+              <div className="bg-background rounded-xl border border-border p-6">
+                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <Map className="w-5 h-5 text-primary" />
+                  Reports Geographic Distribution
+                </h3>
+                <p className="text-muted-foreground text-sm mb-6">
+                  View all environmental complaints on the map. Hotspots indicate areas with 3 or more reports.
+                </p>
+                <ReportsMap />
               </div>
             </div>
           )}
