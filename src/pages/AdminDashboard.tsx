@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import ReportsMap from "@/components/admin/ReportsMap";
+import { exportToPDF, exportToExcel } from "@/lib/exportUtils";
 import {
   Leaf,
   LayoutDashboard,
@@ -33,6 +34,8 @@ import {
   Eye,
   UserCheck,
   Map,
+  Download,
+  FileSpreadsheet,
 } from "lucide-react";
 
 interface Report {
@@ -198,6 +201,18 @@ const AdminDashboard = () => {
         new_status: newStatus,
         notes: `Status updated to ${newStatus}`,
       }]);
+
+      // Send notification
+      try {
+        await supabase.functions.invoke('send-notification', {
+          body: {
+            type: 'status_update',
+            report_id: reportId,
+          },
+        });
+      } catch (notifError) {
+        console.log('Notification not sent:', notifError);
+      }
 
       toast({
         title: "Status Updated",
@@ -455,7 +470,7 @@ const AdminDashboard = () => {
           {/* Reports Tab */}
           {activeTab === "reports" && (
             <div className="space-y-6">
-              {/* Filters */}
+              {/* Filters & Export */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -480,6 +495,24 @@ const AdminDashboard = () => {
                     <SelectItem value="closed">Closed</SelectItem>
                   </SelectContent>
                 </Select>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => exportToPDF(reports)}
+                    disabled={reports.length === 0}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    PDF
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => exportToExcel(reports)}
+                    disabled={reports.length === 0}
+                  >
+                    <FileSpreadsheet className="w-4 h-4 mr-2" />
+                    Excel
+                  </Button>
+                </div>
               </div>
 
               {/* Reports Table */}

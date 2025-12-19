@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import SubmitReport from "./pages/SubmitReport";
 import AdminDashboard from "./pages/AdminDashboard";
 import TrackReportPage from "./pages/TrackReportPage";
+import FieldOfficerDashboard from "./pages/FieldOfficerDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/submit-report" element={<SubmitReport />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/track" element={<TrackReportPage />} />
+            <Route path="/field-officer" element={<FieldOfficerDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
