@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import ReportsMap from "@/components/admin/ReportsMap";
 import { exportToPDF, exportToExcel } from "@/lib/exportUtils";
+import UserManagement from "@/components/admin/UserManagement";
 import {
   Leaf,
   LayoutDashboard,
@@ -703,13 +704,7 @@ const AdminDashboard = () => {
 
           {/* Users Tab */}
           {activeTab === "users" && userRole === "super_admin" && (
-            <div className="bg-background rounded-xl border border-border p-6">
-              <h3 className="font-semibold text-foreground mb-4">User Management</h3>
-              <p className="text-muted-foreground">
-                User management features coming soon. You'll be able to manage field officers, 
-                assign LGAs, and set permissions.
-              </p>
-            </div>
+            <UserManagement />
           )}
         </div>
       </main>

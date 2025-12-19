@@ -21,8 +21,8 @@ const Header = () => {
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Report Issue", href: "/submit-report" },
-    { label: "Track Report", href: "/#track" },
-    { label: "About", href: "/#about" },
+    { label: "Track Report", href: "/track" },
+    { label: "Statistics", href: "/stats" },
     { label: "Contact", href: "/#contact" },
   ];
 
