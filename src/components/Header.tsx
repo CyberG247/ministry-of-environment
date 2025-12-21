@@ -23,7 +23,7 @@ const Header = () => {
     { label: "Report Issue", href: "/submit-report" },
     { label: "Track Report", href: "/track" },
     { label: "Statistics", href: "/stats" },
-    { label: "Contact", href: "/#contact" },
+    { label: "News", href: "/news" },
   ];
 
   const isAdmin = userRole === "admin" || userRole === "super_admin" || userRole === "field_officer";
@@ -73,7 +73,7 @@ const Header = () => {
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center gap-3">
-            {user ? (
+              {user ? (
               <>
                 {isAdmin && (
                   <Button
@@ -86,12 +86,12 @@ const Header = () => {
                   </Button>
                 )}
                 <Button
-                  variant={isScrolled ? "secondary" : "heroOutline"}
+                  variant={isScrolled ? "outline" : "heroOutline"}
                   size="sm"
-                  onClick={handleLogout}
+                  onClick={() => navigate("/dashboard")}
                 >
                   <User className="w-4 h-4" />
-                  Sign Out
+                  My Dashboard
                 </Button>
               </>
             ) : (
@@ -150,8 +150,9 @@ const Header = () => {
                       Admin Panel
                     </Button>
                   )}
-                  <Button variant="secondary" className="w-full" onClick={handleLogout}>
-                    Sign Out
+                  <Button variant="outline" className="w-full" onClick={() => navigate("/dashboard")}>
+                    <User className="w-4 h-4" />
+                    My Dashboard
                   </Button>
                 </>
               ) : (
