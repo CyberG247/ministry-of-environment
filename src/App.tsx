@@ -14,6 +14,7 @@ import PublicStats from "./pages/PublicStats";
 import CitizenDashboard from "./pages/CitizenDashboard";
 import NotificationPreferences from "./pages/NotificationPreferences";
 import NewsMedia from "./pages/NewsMedia";
+import UserProfile from "./pages/UserProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/dashboard" element={<CitizenDashboard />} />
             <Route path="/notifications" element={<NotificationPreferences />} />
             <Route path="/news" element={<NewsMedia />} />
+            <Route path="/profile" element={<UserProfile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
