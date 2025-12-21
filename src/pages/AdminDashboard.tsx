@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import ReportsMap from "@/components/admin/ReportsMap";
 import { exportToPDF, exportToExcel } from "@/lib/exportUtils";
 import UserManagement from "@/components/admin/UserManagement";
+import NewsManagement from "@/components/admin/NewsManagement";
 import {
   Leaf,
   LayoutDashboard,
@@ -37,6 +38,7 @@ import {
   Map,
   Download,
   FileSpreadsheet,
+  Newspaper,
 } from "lucide-react";
 
 interface Report {
@@ -317,17 +319,26 @@ const AdminDashboard = () => {
             <Map className="w-5 h-5" />
             GIS Map
           </button>
-          {userRole === "super_admin" && (
+            {userRole === "super_admin" && (
+              <button
+                onClick={() => setActiveTab("users")}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  activeTab === "users" ? "bg-primary text-primary-foreground" : "text-background/70 hover:bg-background/10"
+                }`}
+              >
+                <Users className="w-5 h-5" />
+                User Management
+              </button>
+            )}
             <button
-              onClick={() => setActiveTab("users")}
+              onClick={() => setActiveTab("news")}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                activeTab === "users" ? "bg-primary text-primary-foreground" : "text-background/70 hover:bg-background/10"
+                activeTab === "news" ? "bg-primary text-primary-foreground" : "text-background/70 hover:bg-background/10"
               }`}
             >
-              <Users className="w-5 h-5" />
-              User Management
+              <Newspaper className="w-5 h-5" />
+              News & Media
             </button>
-          )}
         </nav>
 
         <div className="p-4 border-t border-background/10">
@@ -351,6 +362,9 @@ const AdminDashboard = () => {
                 {activeTab === "overview" && "Dashboard Overview"}
                 {activeTab === "reports" && "Reports Management"}
                 {activeTab === "analytics" && "Analytics"}
+                {activeTab === "map" && "GIS Map View"}
+                {activeTab === "users" && "User Management"}
+                {activeTab === "news" && "News & Media"}
                 {activeTab === "map" && "GIS Map View"}
                 {activeTab === "users" && "User Management"}
               </h1>
@@ -705,6 +719,11 @@ const AdminDashboard = () => {
           {/* Users Tab */}
           {activeTab === "users" && userRole === "super_admin" && (
             <UserManagement />
+          )}
+
+          {/* News Tab */}
+          {activeTab === "news" && (
+            <NewsManagement />
           )}
         </div>
       </main>
