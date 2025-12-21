@@ -11,6 +11,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import TrackReportPage from "./pages/TrackReportPage";
 import FieldOfficerDashboard from "./pages/FieldOfficerDashboard";
 import PublicStats from "./pages/PublicStats";
+import CitizenDashboard from "./pages/CitizenDashboard";
+import NotificationPreferences from "./pages/NotificationPreferences";
+import NewsMedia from "./pages/NewsMedia";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +33,9 @@ const App = () => (
             <Route path="/track" element={<TrackReportPage />} />
             <Route path="/field-officer" element={<FieldOfficerDashboard />} />
             <Route path="/stats" element={<PublicStats />} />
+            <Route path="/dashboard" element={<CitizenDashboard />} />
+            <Route path="/notifications" element={<NotificationPreferences />} />
+            <Route path="/news" element={<NewsMedia />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

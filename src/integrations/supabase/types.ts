@@ -35,6 +35,102 @@ export type Database = {
         }
         Relationships: []
       }
+      news: {
+        Row: {
+          author_id: string | null
+          category: string | null
+          content: string
+          created_at: string
+          excerpt: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean
+          published_at: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          category?: string | null
+          content: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          published_at?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          category?: string | null
+          content?: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          published_at?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          email_enabled: boolean
+          email_on_assignment: boolean
+          email_on_resolution: boolean
+          email_on_status_change: boolean
+          id: string
+          push_enabled: boolean
+          push_on_assignment: boolean
+          push_on_resolution: boolean
+          push_on_status_change: boolean
+          sms_enabled: boolean
+          sms_on_resolution: boolean
+          sms_on_status_change: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_enabled?: boolean
+          email_on_assignment?: boolean
+          email_on_resolution?: boolean
+          email_on_status_change?: boolean
+          id?: string
+          push_enabled?: boolean
+          push_on_assignment?: boolean
+          push_on_resolution?: boolean
+          push_on_status_change?: boolean
+          sms_enabled?: boolean
+          sms_on_resolution?: boolean
+          sms_on_status_change?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_enabled?: boolean
+          email_on_assignment?: boolean
+          email_on_resolution?: boolean
+          email_on_status_change?: boolean
+          id?: string
+          push_enabled?: boolean
+          push_on_assignment?: boolean
+          push_on_resolution?: boolean
+          push_on_status_change?: boolean
+          sms_enabled?: boolean
+          sms_on_resolution?: boolean
+          sms_on_status_change?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
