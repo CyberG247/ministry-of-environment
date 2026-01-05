@@ -18,6 +18,8 @@ import { exportToPDF, exportToExcel } from "@/lib/exportUtils";
 import UserManagement from "@/components/admin/UserManagement";
 import NewsManagement from "@/components/admin/NewsManagement";
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
+import ReportAssignment from "@/components/admin/ReportAssignment";
+import MonthlyReportExport from "@/components/admin/MonthlyReportExport";
 import { useRealtimeAdminReports } from "@/hooks/useRealtimeReports";
 import {
   Leaf,
@@ -53,6 +55,8 @@ interface Report {
   created_at: string;
   address: string;
   lga: { name: string } | null;
+  lga_id: string | null;
+  assigned_officer_id: string | null;
 }
 
 interface Stats {
@@ -139,6 +143,8 @@ const AdminDashboard = () => {
           priority,
           created_at,
           address,
+          lga_id,
+          assigned_officer_id,
           lga:lgas(name)
         `)
         .order('created_at', { ascending: false });
@@ -502,6 +508,7 @@ const AdminDashboard = () => {
                   </SelectContent>
                 </Select>
                 <div className="flex gap-2">
+                  <MonthlyReportExport />
                   <Button
                     variant="outline"
                     onClick={() => exportToPDF(reports)}
@@ -534,6 +541,7 @@ const AdminDashboard = () => {
                         <th className="text-left p-4 font-medium text-foreground">Status</th>
                         <th className="text-left p-4 font-medium text-foreground">Priority</th>
                         <th className="text-left p-4 font-medium text-foreground">Date</th>
+                        <th className="text-left p-4 font-medium text-foreground">Assignment</th>
                         <th className="text-left p-4 font-medium text-foreground">Actions</th>
                       </tr>
                     </thead>
@@ -593,6 +601,15 @@ const AdminDashboard = () => {
                           </td>
                           <td className="p-4 text-sm text-muted-foreground">
                             {new Date(report.created_at).toLocaleDateString()}
+                          </td>
+                          <td className="p-4">
+                            <ReportAssignment
+                              reportId={report.id}
+                              reportTrackingId={report.tracking_id}
+                              currentOfficerId={report.assigned_officer_id}
+                              reportLgaId={report.lga_id}
+                              onAssigned={fetchReports}
+                            />
                           </td>
                           <td className="p-4">
                             <Button variant="ghost" size="sm">
