@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import { format } from "date-fns";
+import { useRealtimeReports } from "@/hooks/useRealtimeReports";
 
 interface Report {
   id: string;
@@ -48,18 +49,6 @@ const CitizenDashboard = () => {
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
-    }
-  }, [user, authLoading, navigate]);
-
-  useEffect(() => {
-    if (user) {
-      fetchReports();
-    }
-  }, [user]);
-
   const fetchReports = async () => {
     try {
       const { data, error } = await supabase
@@ -76,6 +65,21 @@ const CitizenDashboard = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/auth");
+    }
+  }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+    if (user) {
+      fetchReports();
+    }
+  }, [user]);
+
+  // Real-time notifications for citizen reports
+  useRealtimeReports(user?.id, fetchReports);
 
   const getStats = () => {
     const total = reports.length;

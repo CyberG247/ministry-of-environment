@@ -17,6 +17,8 @@ import ReportsMap from "@/components/admin/ReportsMap";
 import { exportToPDF, exportToExcel } from "@/lib/exportUtils";
 import UserManagement from "@/components/admin/UserManagement";
 import NewsManagement from "@/components/admin/NewsManagement";
+import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
+import { useRealtimeAdminReports } from "@/hooks/useRealtimeReports";
 import {
   Leaf,
   LayoutDashboard,
@@ -115,24 +117,13 @@ const AdminDashboard = () => {
 
     fetchReports();
     fetchStats();
-
-    // Set up realtime subscription
-    const channel = supabase
-      .channel('reports-changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'reports' },
-        () => {
-          fetchReports();
-          fetchStats();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, [user, userRole, navigate]);
+
+  // Real-time notifications for admin
+  useRealtimeAdminReports(() => {
+    fetchReports();
+    fetchStats();
+  });
 
   const fetchReports = async () => {
     setLoading(true);
@@ -624,80 +615,7 @@ const AdminDashboard = () => {
 
           {/* Analytics Tab */}
           {activeTab === "analytics" && (
-            <div className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Reports by Category */}
-                <div className="bg-background rounded-xl border border-border p-6">
-                  <h3 className="font-semibold text-foreground mb-4">Reports by Category</h3>
-                  <div className="space-y-4">
-                    {Object.entries(categoryLabels).map(([key, label]) => {
-                      const count = reports.filter(r => r.category === key).length;
-                      const percentage = stats.total ? Math.round((count / stats.total) * 100) : 0;
-                      return (
-                        <div key={key} className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span>{label}</span>
-                            <span className="text-muted-foreground">{count} ({percentage}%)</span>
-                          </div>
-                          <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-primary transition-all duration-300"
-                              style={{ width: `${percentage}%` }}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Reports by Status */}
-                <div className="bg-background rounded-xl border border-border p-6">
-                  <h3 className="font-semibold text-foreground mb-4">Reports by Status</h3>
-                  <div className="space-y-4">
-                    {['submitted', 'assigned', 'in_progress', 'resolved', 'closed'].map((status) => {
-                      const count = reports.filter(r => r.status === status).length;
-                      const percentage = stats.total ? Math.round((count / stats.total) * 100) : 0;
-                      return (
-                        <div key={status} className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="capitalize">{status.replace('_', ' ')}</span>
-                            <span className="text-muted-foreground">{count} ({percentage}%)</span>
-                          </div>
-                          <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                            <div
-                              className={`h-full ${statusColors[status]} transition-all duration-300`}
-                              style={{ width: `${percentage}%` }}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Resolution Rate */}
-              <div className="bg-background rounded-xl border border-border p-6">
-                <h3 className="font-semibold text-foreground mb-4">Resolution Performance</h3>
-                <div className="grid sm:grid-cols-3 gap-6 text-center">
-                  <div>
-                    <p className="text-4xl font-bold text-primary">
-                      {stats.total ? Math.round((stats.resolved / stats.total) * 100) : 0}%
-                    </p>
-                    <p className="text-muted-foreground">Resolution Rate</p>
-                  </div>
-                  <div>
-                    <p className="text-4xl font-bold text-foreground">24hrs</p>
-                    <p className="text-muted-foreground">Avg Response Time</p>
-                  </div>
-                  <div>
-                    <p className="text-4xl font-bold text-green-600">{stats.resolved}</p>
-                    <p className="text-muted-foreground">Total Resolved</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <AnalyticsDashboard />
           )}
 
           {/* Map Tab */}
