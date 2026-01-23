@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Shield, Leaf, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, userRole, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,12 +20,45 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "Report Issue", href: "/submit-report" },
-    { label: "Track Report", href: "/track" },
-    { label: "Statistics", href: "/stats" },
-    { label: "News", href: "/news" },
+    { label: "Home", href: "/", isSection: false },
+    { label: "Categories", href: "/#categories", isSection: true },
+    { label: "How It Works", href: "/#how-it-works", isSection: true },
+    { label: "Statistics", href: "/stats", isSection: false },
+    { label: "News", href: "/news", isSection: false },
   ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) => {
+    if (link.isSection) {
+      e.preventDefault();
+      const sectionId = link.href.replace("/#", "");
+      
+      // If on homepage, scroll to section
+      if (location.pathname === "/") {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      } else {
+        // Navigate to homepage first, then scroll
+        navigate("/");
+        setTimeout(() => {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 100);
+      }
+      setIsMobileMenuOpen(false);
+    } else if (link.href === "/") {
+      e.preventDefault();
+      if (location.pathname === "/") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        navigate("/");
+      }
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   const isAdmin = userRole === "admin" || userRole === "super_admin" || userRole === "field_officer";
 
@@ -60,7 +94,8 @@ const Header = () => {
               <a
                 key={link.label}
                 href={link.href}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                onClick={(e) => handleNavClick(e, link)}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
                   isScrolled
                     ? "text-foreground hover:bg-secondary hover:text-primary"
                     : "text-background/90 hover:text-background hover:bg-background/10"
@@ -135,8 +170,8 @@ const Header = () => {
               <a
                 key={link.label}
                 href={link.href}
-                className="block px-4 py-3 rounded-lg text-foreground hover:bg-secondary transition-colors font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={(e) => handleNavClick(e, link)}
+                className="block px-4 py-3 rounded-lg text-foreground hover:bg-secondary transition-colors font-medium cursor-pointer"
               >
                 {link.label}
               </a>

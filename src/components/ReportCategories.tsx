@@ -54,7 +54,7 @@ const categories = [
 
 const ReportCategories = () => {
   return (
-    <section id="report" className="py-20 bg-background">
+    <section id="categories" className="py-20 bg-background">
       <div className="container-gov">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
