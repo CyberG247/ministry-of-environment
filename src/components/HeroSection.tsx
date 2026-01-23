@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MapPin, Camera } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-environment.jpg";
 
 const HeroSection = () => {
@@ -38,14 +39,18 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 animate-fade-up animation-delay-300">
-              <Button variant="hero" size="xl">
-                <MapPin className="w-5 h-5" />
-                Report an Issue
-                <ArrowRight className="w-5 h-5" />
+              <Button variant="hero" size="xl" asChild>
+                <Link to="/submit-report">
+                  <MapPin className="w-5 h-5" />
+                  Report an Issue
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
               </Button>
-              <Button variant="heroOutline" size="xl">
-                <Camera className="w-5 h-5" />
-                Track Your Report
+              <Button variant="heroOutline" size="xl" asChild>
+                <Link to="/track">
+                  <Camera className="w-5 h-5" />
+                  Track Your Report
+                </Link>
               </Button>
             </div>
 
