@@ -8,6 +8,7 @@ import TrackReport from "@/components/TrackReport";
 import StatsSection from "@/components/StatsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const Index = () => {
   return (
@@ -24,6 +25,7 @@ const Index = () => {
         <CTASection />
       </main>
       <Footer />
+      <ScrollToTop />
     </div>
   );
 };
