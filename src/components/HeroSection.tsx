@@ -39,19 +39,21 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 animate-fade-up animation-delay-300">
-              <Button variant="hero" size="xl" asChild>
-                <Link to="/submit-report">
-                  <MapPin className="w-5 h-5" />
-                  Report an Issue
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </Button>
-              <Button variant="heroOutline" size="xl" asChild>
-                <Link to="/track">
-                  <Camera className="w-5 h-5" />
-                  Track Your Report
-                </Link>
-              </Button>
+              <Link 
+                to="/submit-report"
+                className="inline-flex items-center justify-center gap-2 h-14 rounded-xl px-10 text-lg font-bold bg-background text-primary hover:bg-background/90 shadow-gov-lg hover:shadow-gov-xl hover:-translate-y-1 transition-all duration-300"
+              >
+                <MapPin className="w-5 h-5" />
+                Report an Issue
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link 
+                to="/track"
+                className="inline-flex items-center justify-center gap-2 h-14 rounded-xl px-10 text-lg font-bold border-2 border-background bg-transparent text-background hover:bg-background/10 transition-all duration-300"
+              >
+                <Camera className="w-5 h-5" />
+                Track Your Report
+              </Link>
             </div>
 
             {/* Stats */}
