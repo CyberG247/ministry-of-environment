@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
   const { user, userRole, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,18 +15,56 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+
+      // Only track sections on homepage
+      if (location.pathname !== "/") return;
+
+      const sections = ["categories", "how-it-works", "stats"];
+      const scrollPosition = window.scrollY + 150;
+
+      // Check if at top of page
+      if (window.scrollY < 100) {
+        setActiveSection("");
+        return;
+      }
+
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(sectionId);
+            return;
+          }
+        }
+      }
     };
+
     window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Check initial state
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [location.pathname]);
 
   const navLinks = [
-    { label: "Home", href: "/", isSection: false },
-    { label: "Categories", href: "/#categories", isSection: true },
-    { label: "How It Works", href: "/#how-it-works", isSection: true },
-    { label: "Statistics", href: "/stats", isSection: false },
-    { label: "News", href: "/news", isSection: false },
+    { label: "Home", href: "/", isSection: false, sectionId: "" },
+    { label: "Categories", href: "/#categories", isSection: true, sectionId: "categories" },
+    { label: "How It Works", href: "/#how-it-works", isSection: true, sectionId: "how-it-works" },
+    { label: "Statistics", href: "/stats", isSection: false, sectionId: "" },
+    { label: "News", href: "/news", isSection: false, sectionId: "" },
   ];
+
+  const isLinkActive = (link: typeof navLinks[0]) => {
+    if (link.isSection && location.pathname === "/") {
+      return activeSection === link.sectionId;
+    }
+    if (!link.isSection && link.href !== "/") {
+      return location.pathname === link.href;
+    }
+    if (link.href === "/" && location.pathname === "/" && !activeSection) {
+      return true;
+    }
+    return false;
+  };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) => {
     if (link.isSection) {
@@ -90,20 +129,32 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
-                  isScrolled
-                    ? "text-foreground hover:bg-secondary hover:text-primary"
-                    : "text-background/90 hover:text-background hover:bg-background/10"
-                }`}
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const active = isLinkActive(link);
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer relative ${
+                    isScrolled
+                      ? active
+                        ? "text-primary bg-primary/10"
+                        : "text-foreground hover:bg-secondary hover:text-primary"
+                      : active
+                        ? "text-background bg-background/20"
+                        : "text-background/90 hover:text-background hover:bg-background/10"
+                  }`}
+                >
+                  {link.label}
+                  {active && (
+                    <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full ${
+                      isScrolled ? "bg-primary" : "bg-background"
+                    }`} />
+                  )}
+                </a>
+              );
+            })}
           </nav>
 
           {/* CTA Buttons */}
@@ -166,16 +217,23 @@ const Header = () => {
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-background border-t border-border animate-fade-in">
           <nav className="container-gov py-4 space-y-2">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link)}
-                className="block px-4 py-3 rounded-lg text-foreground hover:bg-secondary transition-colors font-medium cursor-pointer"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const active = isLinkActive(link);
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link)}
+                  className={`block px-4 py-3 rounded-lg transition-colors font-medium cursor-pointer ${
+                    active
+                      ? "text-primary bg-primary/10 border-l-4 border-primary"
+                      : "text-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
             <div className="pt-4 space-y-2 border-t border-border mt-4">
               {user ? (
                 <>
