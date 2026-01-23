@@ -13,6 +13,7 @@ import {
   ReviewStep,
   SuccessStep,
 } from "@/components/report/ReportFormSteps";
+import FormProgressSidebar from "@/components/report/FormProgressSidebar";
 
 const SubmitReport = () => {
   const { user } = useAuth();
@@ -150,6 +151,12 @@ const SubmitReport = () => {
     setTrackingId(null);
   };
 
+  const handleStepClick = (step: number) => {
+    if (step <= currentStep || step <= totalSteps) {
+      setCurrentStep(step);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-secondary/30">
       {/* Header */}
@@ -175,9 +182,9 @@ const SubmitReport = () => {
         </div>
       </header>
 
-      {/* Progress Bar */}
+      {/* Mobile Progress Bar */}
       {currentStep <= totalSteps && (
-        <div className="bg-background border-b border-border py-4">
+        <div className="lg:hidden bg-background border-b border-border py-4">
           <div className="container-gov">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">
@@ -197,65 +204,79 @@ const SubmitReport = () => {
         </div>
       )}
 
-      {/* Form Content */}
+      {/* Form Content with Sidebar */}
       <main className="container-gov py-8">
-        <div className="max-w-xl mx-auto bg-background rounded-2xl shadow-gov p-6 md:p-8">
-          {currentStep === 1 && (
-            <CategoryStep
+        <div className="flex gap-8">
+          {/* Sticky Progress Sidebar */}
+          {currentStep <= totalSteps && (
+            <FormProgressSidebar
+              currentStep={currentStep}
               formData={formData}
-              setFormData={setFormData}
-              onNext={() => setCurrentStep(2)}
+              onStepClick={handleStepClick}
             />
           )}
-          {currentStep === 2 && (
-            <LocationStep
-              formData={formData}
-              setFormData={setFormData}
-              onNext={() => setCurrentStep(3)}
-              onBack={() => setCurrentStep(1)}
-            />
-          )}
-          {currentStep === 3 && (
-            <DetailsStep
-              formData={formData}
-              setFormData={setFormData}
-              onNext={() => setCurrentStep(4)}
-              onBack={() => setCurrentStep(2)}
-            />
-          )}
-          {currentStep === 4 && (
-            <MediaStep
-              formData={formData}
-              setFormData={setFormData}
-              onNext={() => setCurrentStep(5)}
-              onBack={() => setCurrentStep(3)}
-            />
-          )}
-          {currentStep === 5 && (
-            <ReviewStep
-              formData={formData}
-              setFormData={setFormData}
-              onBack={() => setCurrentStep(4)}
-              onSubmit={handleSubmit}
-              isSubmitting={isSubmitting}
-            />
-          )}
-          {currentStep === 6 && trackingId && (
-            <SuccessStep trackingId={trackingId} onClose={resetForm} />
-          )}
-        </div>
 
-        {/* Login Prompt */}
-        {!user && currentStep <= totalSteps && (
-          <div className="max-w-xl mx-auto mt-6 p-4 bg-primary/5 rounded-xl border border-primary/20 text-center">
-            <p className="text-sm text-muted-foreground">
-              <Button variant="link" onClick={() => navigate("/auth")} className="p-0 h-auto text-primary">
-                Sign in
-              </Button>{" "}
-              to track your reports and receive updates, or submit anonymously.
-            </p>
+          {/* Form */}
+          <div className="flex-1 max-w-xl mx-auto lg:mx-0">
+            <div className="bg-background rounded-2xl shadow-gov p-6 md:p-8">
+              {currentStep === 1 && (
+                <CategoryStep
+                  formData={formData}
+                  setFormData={setFormData}
+                  onNext={() => setCurrentStep(2)}
+                />
+              )}
+              {currentStep === 2 && (
+                <LocationStep
+                  formData={formData}
+                  setFormData={setFormData}
+                  onNext={() => setCurrentStep(3)}
+                  onBack={() => setCurrentStep(1)}
+                />
+              )}
+              {currentStep === 3 && (
+                <DetailsStep
+                  formData={formData}
+                  setFormData={setFormData}
+                  onNext={() => setCurrentStep(4)}
+                  onBack={() => setCurrentStep(2)}
+                />
+              )}
+              {currentStep === 4 && (
+                <MediaStep
+                  formData={formData}
+                  setFormData={setFormData}
+                  onNext={() => setCurrentStep(5)}
+                  onBack={() => setCurrentStep(3)}
+                />
+              )}
+              {currentStep === 5 && (
+                <ReviewStep
+                  formData={formData}
+                  setFormData={setFormData}
+                  onBack={() => setCurrentStep(4)}
+                  onSubmit={handleSubmit}
+                  isSubmitting={isSubmitting}
+                />
+              )}
+              {currentStep === 6 && trackingId && (
+                <SuccessStep trackingId={trackingId} onClose={resetForm} />
+              )}
+            </div>
+
+            {/* Login Prompt */}
+            {!user && currentStep <= totalSteps && (
+              <div className="mt-6 p-4 bg-primary/5 rounded-xl border border-primary/20 text-center">
+                <p className="text-sm text-muted-foreground">
+                  <Button variant="link" onClick={() => navigate("/auth")} className="p-0 h-auto text-primary">
+                    Sign in
+                  </Button>{" "}
+                  to track your reports and receive updates, or submit anonymously.
+                </p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </main>
     </div>
   );
